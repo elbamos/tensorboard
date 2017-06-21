@@ -214,11 +214,11 @@ class SummaryWriter(object):
     def add_scalar(self, name, scalar_value, global_step=None):
         self.file_writer.add_summary(scalar(name, scalar_value), global_step)
 
-    def add_histogram(self, name, values):
-        self.file_writer.add_summary(histogram(name, values))
+    def add_histogram(self, name, values, global_step=None):
+        self.file_writer.add_summary(histogram(name, values), global_step)
 
-    def add_image(self, tag, img_tensor):
-        self.file_writer.add_summary(image(tag, img_tensor))
+    def add_image(self, tag, img_tensor, global_step-None):
+        self.file_writer.add_summary(image(tag, img_tensor), global_step)
 
     def close(self):
         self.file_writer.flush()
