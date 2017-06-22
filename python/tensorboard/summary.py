@@ -146,7 +146,7 @@ def make_histogram(values):
                           bucket=bucket)
 
 
-def image(tag, tensor):
+def image(tag, image):
     """Outputs a `Summary` protocol buffer with images.
     The summary has up to `max_images` summary values containing images. The
     images are built from `tensor` which must be 3-D with shape `[height, width,
@@ -170,32 +170,28 @@ def image(tag, tensor):
       buffer.
     """
     tag = _clean_tag(tag)
-    if not isinstance(tensor, (np.ndarray, Image)):
+    #if not isinstance(tensor, (np.ndarray, Image)):
         # try conversion, if failed then need handle by user.
-        tensor = np.ndarray(tensor, dtype=np.float32)
-    if isinstance(tensor, np.ndarray):
-      shape = tensor.shape
-      height, width, channel = shape[0], shape[1], shape[2]
-      if channel == 1:
+    #    tensor = np.ndarray(tensor, dtype=np.float32)
+    #if isinstance(tensor, np.ndarray):
+    #  shape = tensor.shape
+    #  height, width, channel = shape[0], shape[1], shape[2]
+    #  if channel == 1:
           # walk around. PIL's setting on dimension.
-          tensor = np.reshape(tensor, (height, width))
-    image = make_image(tensor, height, width, channel)
+    #      tensor = np.reshape(tensor, (height, width))
+    width, height = image.size
+    if image.mode in ["1", "L", "P"]:
+      channel = 1
+    elif image.mode in ["RGBA", "CMYK"]:
+      channel = 4
+    else:
+      channel = 3
+    image = make_image(image, height, width, channel)
     return Summary(value=[Summary.Value(tag=tag, image=image)])
 
 
-def make_image(tensor, height, width, channel):
+def make_image(image, height, width, channel):
     """Convert an numpy representation image to Image protobuf"""
-    if isinstance(tensor, Image):
-      image = tensor
-      width, height = image.size
-      if image.mode in ["1", "L", "P"]:
-        channels = 1
-      elif image.mode in ["RGBA", "CMYK"]:
-        channels = 4
-      else:
-        channels = 3
-    else:
-      image = Image.fromarray(tensor)
     output = StringIO()
     image.save(output, format='PNG')
     image_string = output.getvalue()
