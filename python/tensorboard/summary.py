@@ -170,7 +170,7 @@ def image(tag, tensor):
       buffer.
     """
     tag = _clean_tag(tag)
-    if not isinstance(tensor, np.ndarray) and not isinstance(tensor, Image):
+    if not isinstance(tensor, (np.ndarray, Image)):
         # try conversion, if failed then need handle by user.
         tensor = np.ndarray(tensor, dtype=np.float32)
     if isinstance(tensor, np.ndarray):
