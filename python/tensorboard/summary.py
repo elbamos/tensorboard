@@ -154,6 +154,7 @@ def image(tag, tensor):
     *  1: `tensor` is interpreted as Grayscale.
     *  3: `tensor` is interpreted as RGB.
     *  4: `tensor` is interpreted as RGBA.
+    Alternatively, `tensor` may be a PIL.Image.
     The `name` in the outputted Summary.Value protobufs is generated based on the
     name, with a suffix depending on the max_outputs setting:
     *  If `max_outputs` is 1, the summary value tag is '*name*/image'.
@@ -169,14 +170,15 @@ def image(tag, tensor):
       buffer.
     """
     tag = _clean_tag(tag)
-    if not isinstance(tensor, np.ndarray):
+    if not isinstance(tensor, np.ndarray) and not isinstance(tensor, PIL.Image):
         # try conversion, if failed then need handle by user.
         tensor = np.ndarray(tensor, dtype=np.float32)
-    shape = tensor.shape
-    height, width, channel = shape[0], shape[1], shape[2]
-    if channel == 1:
-        # walk around. PIL's setting on dimension.
-        tensor = np.reshape(tensor, (height, width))
+    if isinstance(tensor, np.ndarray)
+      shape = tensor.shape
+      height, width, channel = shape[0], shape[1], shape[2]
+      if channel == 1:
+          # walk around. PIL's setting on dimension.
+          tensor = np.reshape(tensor, (height, width))
     image = make_image(tensor, height, width, channel)
     return Summary(value=[Summary.Value(tag=tag, image=image)])
 
@@ -185,6 +187,13 @@ def make_image(tensor, height, width, channel):
     """Convert an numpy representation image to Image protobuf"""
     if isinstance(tensor, Image):
       image = tensor
+      width, height = image.size
+      if image.mode in ["1", "L", "P"]:
+        channels = 1
+      elif image.mode in ["RGBA", "CMYK"]:
+        channels = 4
+      else:
+        channels = 3
      else:
       image = Image.fromarray(tensor)
     output = StringIO()
