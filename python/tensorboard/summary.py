@@ -173,7 +173,7 @@ def image(tag, tensor):
     if not isinstance(tensor, np.ndarray) and not isinstance(tensor, PIL.Image):
         # try conversion, if failed then need handle by user.
         tensor = np.ndarray(tensor, dtype=np.float32)
-    if isinstance(tensor, np.ndarray)
+    if isinstance(tensor, np.ndarray):
       shape = tensor.shape
       height, width, channel = shape[0], shape[1], shape[2]
       if channel == 1:
