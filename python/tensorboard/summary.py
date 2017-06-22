@@ -183,7 +183,10 @@ def image(tag, tensor):
 
 def make_image(tensor, height, width, channel):
     """Convert an numpy representation image to Image protobuf"""
-    image = Image.fromarray(tensor)
+    if isinstance(tensor, Image):
+      image = tensor
+     else:
+      image = Image.fromarray(tensor)
     output = StringIO()
     image.save(output, format='PNG')
     image_string = output.getvalue()
