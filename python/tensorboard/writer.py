@@ -217,7 +217,7 @@ class SummaryWriter(object):
     def add_histogram(self, name, values, global_step=None):
         self.file_writer.add_summary(histogram(name, values), global_step)
 
-    def add_image(self, tag, img_tensor, global_step-None):
+    def add_image(self, tag, img_tensor, global_step=None):
         self.file_writer.add_summary(image(tag, img_tensor), global_step)
 
     def close(self):
