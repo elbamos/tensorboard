@@ -194,7 +194,7 @@ def make_image(tensor, height, width, channel):
         channels = 4
       else:
         channels = 3
-     else:
+    else:
       image = Image.fromarray(tensor)
     output = StringIO()
     image.save(output, format='PNG')
