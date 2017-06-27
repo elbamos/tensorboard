@@ -36,7 +36,7 @@ from __future__ import print_function
 import logging
 import re as _re
 import bisect
-from six import StringIO
+from six import StringIO, BytesIO
 from six.moves import range
 from PIL import Image
 import numpy as np
@@ -192,7 +192,7 @@ def image(tag, image):
 
 def make_image(image, height, width, channel):
     """Convert an numpy representation image to Image protobuf"""
-    output = StringIO()
+    output = BytesIO()
     image.save(output, format='PNG')
     image_string = output.getvalue()
     output.close()
